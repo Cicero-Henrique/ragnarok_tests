@@ -1,12 +1,13 @@
 # ragnarok_tests
 
 Usando a API real
-| ID | Title | Steps | Expected Results | Status |
-| -------- | ------- | -------- | ------- | -------- |
-| 01 | Amount of items when page load is finished | User should open the url: https://ragnarok.com.br | When the page is loaded, should be loaded 60 items | Pass   |
-* Ao carregar a página, verificar se a quantidade x de itens é carregada
-* Ao descer, verificar se mais itens são carregados
-* Descer, verificar se o botão de voltar ao topo está visível, se sim, clicar e verificar se volta ao topo
+| ID | Title | Preconditions | Steps | Expected Results | Status |
+| -- | ----- | ------------- | ----- | ---------------- | ------ |
+| 01 | Verify Initial Items Load | User is on the homepage | 1. Open the URL: https://ragnarokwiki.com.br | 60 items should be loaded when the page finishes loading. | Pass |
+| 02 | Load More Items on Scroll | User is on the homepage | 1. Scroll down the page until the last of the initial 60 items is visible | An additional 60 items should be loaded automatically. | Pass |
+| 03 | Back to Top Button Functionality | User is on the homepage and scrolled down | 1. Scroll down the page \n 2. Click on the "Back to Top" button | The page should smoothly scroll back to the top. | Pass |
+
+
     Contexto de busca
     * Inserir poucas letras na barra de pesquisa, usar a chamada para a API como tempo de espera e verificar a quantidade de itens
     * Inserir mais letras na barra de pesquisa e verificar a quantidade de itens
