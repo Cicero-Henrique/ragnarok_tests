@@ -1,6 +1,4 @@
 describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
-    const initialTerm = 'React'
-    const newTerm = 'Cypress'
 
     context('Hitting the real API', () => {
         beforeEach(() => {
@@ -30,6 +28,16 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             cy.get('#backToTopButton').should('be.visible')
             cy.get('#backToTopButton').click()
             cy.contains('Monstros').should('be.visible')
+        })
+        it.only('Search Using Short Text', () => {
+            cy.visit('/')
+            cy.wait('@getMonsters')
+            cy.get('#search-name').type('sha{enter}')
+            cy.wait('@getMonsters')
+            cy.get('h5.card-title span').each(($span) => {
+                const text = $span.text().trim().toLowerCase();
+                expect(text).to.contain('sha');
+              });
         })
     })
 })
