@@ -32,7 +32,7 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
         it('Search Using Short Text', () => {
             cy.visit('/')
             cy.wait('@getMonsters')
-            cy.get('#search-name').type('sha{enter}')
+            cy.get('#search-name').type('sha{enter}', { delay: 0 })
             cy.wait('@getMonsters')
             cy.get('h5.card-title span').each(($span) => {
                 const text = $span.text().trim().toLowerCase();
@@ -42,7 +42,7 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
         it('Search Using Long Text', () => {
             cy.visit('/')
             cy.wait('@getMonsters')
-            cy.get('#search-name').type('shadow{enter}')
+            cy.get('#search-name').type('shadow{enter}', { delay: 0 })
             cy.wait('@getMonsters')
             cy.get('h5.card-title span').then((element) => {
                 expect(element.length).to.equal(2)
@@ -50,6 +50,16 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
                 const text = $span.text().trim().toLowerCase();
                 expect(text).to.contain('shadow');
             });
+        })
+        it('Clear Search Bar After Search', () => {
+            cy.visit('/')
+            cy.wait('@getMonsters')
+            cy.get('#search-name').clear()
+            cy.get('#search-name').type('{enter}', { delay: 0 })
+            cy.wait('@getMonsters')
+            cy.get('h5.card-title span').then((element) => {
+                expect(element.length).to.equal(60)
+            })
         })
     })
 })
