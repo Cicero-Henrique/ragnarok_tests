@@ -29,7 +29,7 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             cy.get('#backToTopButton').click()
             cy.contains('Monstros').should('be.visible')
         })
-        it.only('Search Using Short Text', () => {
+        it('Search Using Short Text', () => {
             cy.visit('/')
             cy.wait('@getMonsters')
             cy.get('#search-name').type('sha{enter}')
@@ -37,7 +37,19 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             cy.get('h5.card-title span').each(($span) => {
                 const text = $span.text().trim().toLowerCase();
                 expect(text).to.contain('sha');
-              });
+            });
+        })
+        it('Search Using Long Text', () => {
+            cy.visit('/')
+            cy.wait('@getMonsters')
+            cy.get('#search-name').type('shadow{enter}')
+            cy.wait('@getMonsters')
+            cy.get('h5.card-title span').then((element) => {
+                expect(element.length).to.equal(2)
+            }).each(($span) => {
+                const text = $span.text().trim().toLowerCase();
+                expect(text).to.contain('shadow');
+            });
         })
     })
 })
