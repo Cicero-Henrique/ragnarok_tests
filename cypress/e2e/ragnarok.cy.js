@@ -61,5 +61,17 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
                 expect(element.length).to.equal(60)
             })
         })
+        it('Search Using Special Characters', () => {
+            cy.visit('/')
+            cy.wait('@getMonsters')
+            cy.get('#search-name').type('aço{enter}', { delay: 0 })
+            cy.wait('@getMonsters')
+            cy.get('h5.card-title span').then((element) => {
+                expect(element.length).to.equal(2)
+            }).each(($span) => {
+                const text = $span.text().trim().toLowerCase();
+                expect(text).to.contain('aço');
+            });
+        })
     })
 })
