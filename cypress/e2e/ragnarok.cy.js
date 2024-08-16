@@ -61,7 +61,7 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
                 expect(element.length).to.equal(60)
             })
         })
-        it.only('Search Using Special Characters', () => {
+        it('Search Using Special Characters', () => {
             cy.visit('/')
             cy.wait('@getMonsters')
             cy.get('#search-name').type('aço{enter}', { delay: 0 })
@@ -78,6 +78,16 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             cy.wait('@getMonsters')
             cy.contains('Pesquisa Avançada').click()
             cy.get('#filter').should('be.visible')
+        })
+        it('Hide Advanced Search Bar', () => {
+            cy.visit('/')
+            cy.wait('@getMonsters')
+            cy.clock()
+            cy.contains('Pesquisa Avançada').click()
+            cy.tick(1000)
+            cy.get('#filter').should('be.visible')
+            cy.contains('Pesquisa Avançada').click()
+            cy.get('#filter').should('not.be.visible')
         })
     })
 })
