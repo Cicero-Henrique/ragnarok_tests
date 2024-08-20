@@ -124,5 +124,22 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             cy.contains('Poring').should('be.visible')
             cy.contains('Lobisomem').should('be.visible')
         })
+        it('Filter by Race and Property', () => {
+            cy.visit('/')
+            cy.wait('@getMonsters')
+            cy.clock()
+            cy.contains('Pesquisa Avançada').click()
+            cy.tick(1000)
+            cy.get('.icon-dragon').click()
+            cy.wait('@getMonsters')
+            cy.get('.btn.btn-water').click()
+            cy.wait('@getMonsters')
+            cy.get('.list-group > :nth-child(2) > .badge').then((element) => {
+                expect(element.length).to.equal(9)
+            }).each(($span) => {
+                const text = $span.text().trim().toLowerCase();
+                expect(text).to.contain('água');
+            });
+        })
     })
 })
