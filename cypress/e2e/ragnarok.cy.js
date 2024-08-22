@@ -6,6 +6,18 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
                 method: 'GET',
                 url: '**/api/monsters?**',
             }).as('getMonsters');
+            cy.intercept({
+                method: 'GET',
+                url: '**/api/monsters?**&dragon=true**',
+              }).as('filterByRace');
+            cy.intercept({
+            method: 'GET',
+            url: '**/api/monsters?**&dragon=true**&water=true**',
+            }).as('filterByRaceAndProperty');
+            cy.intercept({
+                method: 'GET',
+                url: '**/api/monsters?**&water=true**',
+            }).as('getMonstersFiltered');
         })
         it('Verify Initial Items Load', () => {
             cy.visit('/')
@@ -96,7 +108,7 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             cy.contains('Pesquisa Avançada').click()
             cy.tick(1000)
             cy.get('.icon-dragon').click()
-            cy.wait('@getMonsters')
+            cy.wait('@filterByRace')
             cy.contains('Fafnir').should('be.visible')
             cy.contains('Dragão Mutante').should('be.visible')
         })
@@ -107,9 +119,8 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             cy.contains('Pesquisa Avançada').click()
             cy.tick(1000)
             cy.get('.icon-dragon').click()
-            cy.wait('@getMonsters')
             cy.get('.icon-angel').click()
-            cy.wait('@getMonsters')
+            cy.wait('@filterByRace')
             cy.contains('Angeling').should('be.visible')
             cy.contains('Dragão Mutante').should('be.visible')
         })
@@ -131,9 +142,9 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             cy.contains('Pesquisa Avançada').click()
             cy.tick(1000)
             cy.get('.icon-dragon').click()
-            cy.wait('@getMonsters')
+            cy.wait('@filterByRace')
             cy.get('.btn.btn-water').click()
-            cy.wait('@getMonsters')
+            cy.wait('@filterByRaceAndProperty')
             cy.get('.list-group > :nth-child(2) > .badge').then((element) => {
                 expect(element.length).to.equal(9)
             }).each(($span) => {
@@ -150,15 +161,15 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             cy.get('.btn.btn-plant').click()
             cy.get('.btn.btn-brute').click()
             cy.wait('@getMonsters')
-            cy.get('.btn.btn-wind').click()
+            cy.get('.btn.btn-water').click()
             cy.get('.btn.btn-fire').click()
-            cy.wait(1000)
+            cy.wait('@getMonstersFiltered')
             cy.get('.list-group > :nth-child(2) > .badge').then((elements) => {
                 expect(elements.length).to.equal(60);
                 const firstTenElements = Cypress._.slice(elements, 0, 10);
                 Cypress._.each(firstTenElements, ($span) => {
                     const text = Cypress.$($span).text().trim().toLowerCase();
-                    expect(text).to.satisfy((txt) => txt.includes('fogo') || txt.includes('vento'));
+                    expect(text).to.satisfy((txt) => txt.includes('fogo') || txt.includes('água'));
                 });
             });
         })
