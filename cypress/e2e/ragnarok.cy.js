@@ -141,5 +141,26 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
                 expect(text).to.contain('água');
             });
         })
+        it('Filter by Two Races and Two Properties', () => {
+            cy.visit('/')
+            cy.wait('@getMonsters')
+            cy.clock()
+            cy.contains('Pesquisa Avançada').click()
+            cy.tick(1000)
+            cy.get('.btn.btn-plant').click()
+            cy.get('.btn.btn-brute').click()
+            cy.wait('@getMonsters')
+            cy.get('.btn.btn-wind').click()
+            cy.get('.btn.btn-fire').click()
+            cy.wait(1000)
+            cy.get('.list-group > :nth-child(2) > .badge').then((elements) => {
+                expect(elements.length).to.equal(60);
+                const firstTenElements = Cypress._.slice(elements, 0, 10);
+                Cypress._.each(firstTenElements, ($span) => {
+                    const text = Cypress.$($span).text().trim().toLowerCase();
+                    expect(text).to.satisfy((txt) => txt.includes('fogo') || txt.includes('vento'));
+                });
+            });
+        })
     })
 })
