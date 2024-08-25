@@ -195,4 +195,23 @@ describe('Ragnarok Wiki Test Execution', { baseUrl: 'https://ragnarokwiki.com.br
             })
         })
     })
+
+    context('Moacking the API', () => {
+        beforeEach(() => {
+            cy.intercept(
+                'GET',
+                `**/api/monsters?**`,
+                { fixture: 'monsters' }
+            ).as('getMockedMonsters')
+            cy.visit('/')
+        })
+
+        it('Mocking a Filter by Race', () => {
+            cy.wait('@getMockedMonsters')
+            cy.openAdvancedSearch()
+            cy.get('.btn.btn-dragon').click()
+            cy.contains('Sombra do Dragão').should('be.visible')
+            cy.contains('Dragão Ancestral').should('be.visible')
+        })
+    })
 })
