@@ -8,20 +8,8 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             }).as('getMonsters');
             cy.intercept({
                 method: 'GET',
-                url: '**/api/monsters?name=&page=2&per_page=*&**=false',
-            }).as('getMoreMonsters');
-            cy.intercept({
-                method: 'GET',
                 url: '**/api/monsters?**&dragon=true**',
-              }).as('filterByRace');
-            cy.intercept({
-            method: 'GET',
-            url: '**/api/monsters?**&dragon=true**&water=true**',
-            }).as('filterByRaceAndProperty');
-            cy.intercept({
-                method: 'GET',
-                url: '**/api/monsters?**&water=true**&fire=true**',
-            }).as('getMonstersFiltered');
+            }).as('filterByRace');
             cy.intercept({
                 method: 'GET',
                 url: '**/api/monsters?name=*&**',
@@ -34,6 +22,10 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             cy.contains('Monstros').should('be.visible')
         })
         it('Load More Items on Scroll', () => {
+            cy.intercept({
+                method: 'GET',
+                url: '**/api/monsters?name=&page=2&per_page=*&**=false',
+            }).as('getMoreMonsters');
             cy.visit('/')
             cy.wait('@getMonsters')
             cy.contains('#1060').scrollIntoView()
@@ -147,6 +139,10 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             cy.contains('Lobisomem').should('be.visible')
         })
         it('Filter by Race and Property', () => {
+            cy.intercept({
+                method: 'GET',
+                url: '**/api/monsters?**&dragon=true**&water=true**',
+            }).as('filterByRaceAndProperty');
             cy.visit('/')
             cy.wait('@getMonsters')
             cy.clock()
@@ -165,6 +161,10 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             });
         })
         it('Filter by Two Races and Two Properties', () => {
+            cy.intercept({
+                method: 'GET',
+                url: '**/api/monsters?**&water=true**&fire=true**',
+            }).as('getMonstersFiltered');
             cy.visit('/')
             cy.wait('@getMonsters')
             cy.clock()
