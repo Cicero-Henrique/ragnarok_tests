@@ -200,13 +200,26 @@ describe('Ragnarok Wiki Test Execution', { baseUrl: 'https://ragnarokwiki.com.br
         beforeEach(() => {
             cy.intercept(
                 'GET',
-                `**/api/monsters?**`,
+                `**/api/monsters?name=&page=*&per_page=*&**=false`,
                 { fixture: 'monsters' }
             ).as('getMockedMonsters')
             cy.visit('/')
         })
 
         it('Mocking a Filter by Race', () => {
+            cy.wait('@getMockedMonsters')
+            cy.openAdvancedSearch()
+            cy.get('.btn.btn-dragon').click()
+            cy.contains('Sombra do Dragão').should('be.visible')
+            cy.contains('Lobisomem').should('be.visible')
+        })
+        it('Mocking a Filter by Two Races', () => {
+            cy.intercept(
+                'GET',
+                `**/api/monsters?**&dragon=true**`,
+                { fixture: 'monsters' }
+            ).as('getMockedDragons')
+            cy.visit('/')
             cy.wait('@getMockedMonsters')
             cy.openAdvancedSearch()
             cy.get('.btn.btn-dragon').click()

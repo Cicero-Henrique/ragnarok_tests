@@ -18,5 +18,15 @@
       "scale": 2,
       "race": 9
     }
+  },
+  {
+    "id": 1022,
+    "name": "Lobisomem",
+    "stats": {
+      "level": 1,
+      "element": 21,
+      "scale": 1,
+      "race": 3
+    }
   }
 ]
