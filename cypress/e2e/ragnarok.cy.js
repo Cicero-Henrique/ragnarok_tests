@@ -1,4 +1,4 @@
-describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
+describe('Ragnarok Wiki Test Execution', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
 
     context('Hitting the real API', () => {
         beforeEach(() => {
@@ -97,9 +97,7 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
         it('Hide Advanced Search Bar', () => {
             cy.visit('/')
             cy.wait('@getMonsters')
-            cy.clock()
-            cy.contains('Pesquisa Avançada').click()
-            cy.tick(1000)
+            cy.openAdvancedSearch()
             cy.get('#filter').should('be.visible')
             cy.contains('Pesquisa Avançada').click()
             cy.get('#filter').should('not.be.visible')
@@ -107,9 +105,7 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
         it('Filter by Race', () => {
             cy.visit('/')
             cy.wait('@getMonsters')
-            cy.clock()
-            cy.contains('Pesquisa Avançada').click()
-            cy.tick(1000)
+            cy.openAdvancedSearch()
             cy.get('.icon-dragon').click()
             cy.wait('@filterByRace')
             cy.contains('Fafnir').should('be.visible')
@@ -118,9 +114,7 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
         it('Filter by Two Races', () => {
             cy.visit('/')
             cy.wait('@getMonsters')
-            cy.clock()
-            cy.contains('Pesquisa Avançada').click()
-            cy.tick(1000)
+            cy.openAdvancedSearch()
             cy.get('.icon-dragon').click()
             cy.get('.icon-angel').click()
             cy.wait('@filterByRace')
@@ -130,9 +124,7 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
         it('Filter by Property', () => {
             cy.visit('/')
             cy.wait('@getMonsters')
-            cy.clock()
-            cy.contains('Pesquisa Avançada').click()
-            cy.tick(1000)
+            cy.openAdvancedSearch()
             cy.get('.btn.btn-water').click()
             cy.wait('@getMonsters')
             cy.contains('Poring').should('be.visible')
@@ -145,9 +137,7 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             }).as('filterByRaceAndProperty');
             cy.visit('/')
             cy.wait('@getMonsters')
-            cy.clock()
-            cy.contains('Pesquisa Avançada').click()
-            cy.tick(1000)
+            cy.openAdvancedSearch()
             cy.get('.icon-dragon').click()
             cy.wait('@filterByRace')
             cy.get('.btn.btn-water').click()
@@ -167,9 +157,7 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             }).as('getMonstersFiltered');
             cy.visit('/')
             cy.wait('@getMonsters')
-            cy.clock()
-            cy.contains('Pesquisa Avançada').click()
-            cy.tick(1000)
+            cy.openAdvancedSearch()
             cy.get('.btn.btn-plant').click()
             cy.get('.btn.btn-brute').click()
             cy.wait('@getMonsters')
@@ -188,9 +176,7 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
         it('Filter by Races, Properties, and Text', () => {
             cy.visit('/')
             cy.wait('@getMonsters')
-            cy.clock()
-            cy.contains('Pesquisa Avançada').click()
-            cy.tick(1000)
+            cy.openAdvancedSearch()
             cy.get('.btn.btn-plant').click()
             cy.get('.btn.btn-brute').click()
             cy.wait('@getMonsters')
