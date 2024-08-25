@@ -4,8 +4,12 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
         beforeEach(() => {
             cy.intercept({
                 method: 'GET',
-                url: '**/api/monsters?**',
+                url: '**/api/monsters?name=&page=*&per_page=*&**=false',
             }).as('getMonsters');
+            cy.intercept({
+                method: 'GET',
+                url: '**/api/monsters?name=&page=2&per_page=*&**=false',
+            }).as('getMoreMonsters');
             cy.intercept({
                 method: 'GET',
                 url: '**/api/monsters?**&dragon=true**',
@@ -16,8 +20,12 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             }).as('filterByRaceAndProperty');
             cy.intercept({
                 method: 'GET',
-                url: '**/api/monsters?**&water=true**',
+                url: '**/api/monsters?**&water=true**&fire=true**',
             }).as('getMonstersFiltered');
+            cy.intercept({
+                method: 'GET',
+                url: '**/api/monsters?name=*&**',
+            }).as('searchByName');
         })
         it('Verify Initial Items Load', () => {
             cy.visit('/')
@@ -29,7 +37,7 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             cy.visit('/')
             cy.wait('@getMonsters')
             cy.contains('#1060').scrollIntoView()
-            cy.wait('@getMonsters').then(interception => {
+            cy.wait('@getMoreMonsters').then(interception => {
                 expect(interception.response.statusCode).to.eq(200);
             })
         })
@@ -45,7 +53,8 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             cy.visit('/')
             cy.wait('@getMonsters')
             cy.get('#search-name').type('sha{enter}', { delay: 0 })
-            cy.wait('@getMonsters')
+            cy.wait('@searchByName')
+            cy.contains('Quick Dark Shadow').should('be.visible')
             cy.get('h5.card-title span').each(($span) => {
                 const text = $span.text().trim().toLowerCase();
                 expect(text).to.contain('sha');
@@ -55,7 +64,8 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             cy.visit('/')
             cy.wait('@getMonsters')
             cy.get('#search-name').type('shadow{enter}', { delay: 0 })
-            cy.wait('@getMonsters')
+            cy.wait('@searchByName')
+            cy.contains('Quick Dark Shadow').should('be.visible')
             cy.get('h5.card-title span').then((element) => {
                 expect(element.length).to.equal(2)
             }).each(($span) => {
@@ -68,7 +78,7 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             cy.wait('@getMonsters')
             cy.get('#search-name').clear()
             cy.get('#search-name').type('{enter}', { delay: 0 })
-            cy.wait('@getMonsters')
+            cy.wait('@searchByName')
             cy.get('h5.card-title span').then((element) => {
                 expect(element.length).to.equal(60)
             })
@@ -77,7 +87,8 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             cy.visit('/')
             cy.wait('@getMonsters')
             cy.get('#search-name').type('aço{enter}', { delay: 0 })
-            cy.wait('@getMonsters')
+            cy.wait('@searchByName')
+            cy.contains('Chonchon de Aço Brutal').should('be.visible')
             cy.get('h5.card-title span').then((element) => {
                 expect(element.length).to.equal(2)
             }).each(($span) => {
@@ -145,6 +156,7 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             cy.wait('@filterByRace')
             cy.get('.btn.btn-water').click()
             cy.wait('@filterByRaceAndProperty')
+            cy.contains('Buwaya').should('be.visible')
             cy.get('.list-group > :nth-child(2) > .badge').then((element) => {
                 expect(element.length).to.equal(9)
             }).each(($span) => {
