@@ -185,5 +185,28 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
                 });
             });
         })
+        it('Filter by Races, Properties, and Text', () => {
+            cy.visit('/')
+            cy.wait('@getMonsters')
+            cy.clock()
+            cy.contains('Pesquisa Avançada').click()
+            cy.tick(1000)
+            cy.get('.btn.btn-plant').click()
+            cy.get('.btn.btn-brute').click()
+            cy.wait('@getMonsters')
+            cy.get('.btn.btn-water').click()
+            cy.get('.btn.btn-wind').click()
+            cy.wait('@getMonsters')
+            cy.get('#search-name').type('lobisomem{enter}', { delay: 0 })
+            cy.wait('@searchByName')
+            cy.contains('Poring').should('not.exist')
+            cy.get('.list-group > :nth-child(2) > .badge').then((element) => {
+                expect(element.length).to.equal(1)
+            })
+            cy.get('h5.card-title span').then((element) => {
+                const text = Cypress.$(element).text().trim().toLowerCase();
+                expect(text).to.equal('lobisomem');
+            })
+        })
     })
 })
