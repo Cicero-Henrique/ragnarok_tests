@@ -258,5 +258,22 @@ describe('Ragnarok Wiki Test Execution', { baseUrl: 'https://ragnarokwiki.com.br
             cy.wait('@getMockedRaceAndProperty')
             cy.contains('Lobisomem').should('be.visible')
         })
+        it('Mocking a Filter by Two Races and Two Properties', () => {
+            cy.intercept(
+                'GET',
+                `**/api/monsters?**&plant=true**&dragon=true**&water=true**&fire=true**`,
+                { fixture: 'monsters' }
+            ).as('getMockedRacesAndProperties')
+            cy.wait('@getMockedMonsters')
+            cy.openAdvancedSearch()
+            cy.get('.btn.btn-dragon').click()
+            cy.get('.btn.btn-plant').click()
+            cy.get('.btn.btn-water').click()
+            cy.get('.btn.btn-fire').click()
+            cy.wait('@getMockedRacesAndProperties')
+            cy.contains('Sombra do Dragão').should('be.visible')
+            cy.contains('Dragão Ancestral').should('be.visible')
+            cy.contains('Lobisomem').should('be.visible')
+        })
     })
 })
