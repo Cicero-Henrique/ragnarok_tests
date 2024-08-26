@@ -23,6 +23,3 @@
 | 19 | Mocking a Filter by Race and Property | Mocks are set up correctly | 1. Select a race and a property from the advanced search options <br/> 2. Intercept the request and trigger the mock | The items corresponding to the mocked response for the selected race and property should be displayed. | Pass |
 | 20 | Mocking a Filter by Two Races and Two Properties | Mocks are set up correctly | 1. Select two races and two properties from the advanced search options <br/> 2. Intercept the request and trigger the mock | The items corresponding to the mocked response for the selected races and properties should be displayed. | Pass |
 | 21 | Mocking a Filter by Races, Properties, and Text | Mocks are set up correctly | 1. Select two races and two properties <br/> 2. Enter text in the search bar <br/> 3. Intercept the request and trigger the mock | The items corresponding to the mocked response, filtered by the races, properties, and text, should be displayed. | Pass |
-
-* Executar os testes em diferentes navegadores
-* Executar testes em telas menores

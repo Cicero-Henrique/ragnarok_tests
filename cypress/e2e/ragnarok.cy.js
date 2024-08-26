@@ -1,4 +1,4 @@
-describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
+describe('Ragnarok Wiki Test Execution', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
 
     context('Hitting the real API', () => {
         beforeEach(() => {
@@ -8,20 +8,8 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             }).as('getMonsters');
             cy.intercept({
                 method: 'GET',
-                url: '**/api/monsters?name=&page=2&per_page=*&**=false',
-            }).as('getMoreMonsters');
-            cy.intercept({
-                method: 'GET',
                 url: '**/api/monsters?**&dragon=true**',
-              }).as('filterByRace');
-            cy.intercept({
-            method: 'GET',
-            url: '**/api/monsters?**&dragon=true**&water=true**',
-            }).as('filterByRaceAndProperty');
-            cy.intercept({
-                method: 'GET',
-                url: '**/api/monsters?**&water=true**&fire=true**',
-            }).as('getMonstersFiltered');
+            }).as('filterByRace');
             cy.intercept({
                 method: 'GET',
                 url: '**/api/monsters?name=*&**',
@@ -34,6 +22,10 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             cy.contains('Monstros').should('be.visible')
         })
         it('Load More Items on Scroll', () => {
+            cy.intercept({
+                method: 'GET',
+                url: '**/api/monsters?name=&page=2&per_page=*&**=false',
+            }).as('getMoreMonsters');
             cy.visit('/')
             cy.wait('@getMonsters')
             cy.contains('#1060').scrollIntoView()
@@ -105,9 +97,7 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
         it('Hide Advanced Search Bar', () => {
             cy.visit('/')
             cy.wait('@getMonsters')
-            cy.clock()
-            cy.contains('Pesquisa Avançada').click()
-            cy.tick(1000)
+            cy.openAdvancedSearch()
             cy.get('#filter').should('be.visible')
             cy.contains('Pesquisa Avançada').click()
             cy.get('#filter').should('not.be.visible')
@@ -115,9 +105,7 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
         it('Filter by Race', () => {
             cy.visit('/')
             cy.wait('@getMonsters')
-            cy.clock()
-            cy.contains('Pesquisa Avançada').click()
-            cy.tick(1000)
+            cy.openAdvancedSearch()
             cy.get('.icon-dragon').click()
             cy.wait('@filterByRace')
             cy.contains('Fafnir').should('be.visible')
@@ -126,9 +114,7 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
         it('Filter by Two Races', () => {
             cy.visit('/')
             cy.wait('@getMonsters')
-            cy.clock()
-            cy.contains('Pesquisa Avançada').click()
-            cy.tick(1000)
+            cy.openAdvancedSearch()
             cy.get('.icon-dragon').click()
             cy.get('.icon-angel').click()
             cy.wait('@filterByRace')
@@ -138,20 +124,20 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
         it('Filter by Property', () => {
             cy.visit('/')
             cy.wait('@getMonsters')
-            cy.clock()
-            cy.contains('Pesquisa Avançada').click()
-            cy.tick(1000)
+            cy.openAdvancedSearch()
             cy.get('.btn.btn-water').click()
             cy.wait('@getMonsters')
             cy.contains('Poring').should('be.visible')
             cy.contains('Lobisomem').should('be.visible')
         })
         it('Filter by Race and Property', () => {
+            cy.intercept({
+                method: 'GET',
+                url: '**/api/monsters?**&dragon=true**&water=true**',
+            }).as('filterByRaceAndProperty');
             cy.visit('/')
             cy.wait('@getMonsters')
-            cy.clock()
-            cy.contains('Pesquisa Avançada').click()
-            cy.tick(1000)
+            cy.openAdvancedSearch()
             cy.get('.icon-dragon').click()
             cy.wait('@filterByRace')
             cy.get('.btn.btn-water').click()
@@ -165,11 +151,13 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
             });
         })
         it('Filter by Two Races and Two Properties', () => {
+            cy.intercept({
+                method: 'GET',
+                url: '**/api/monsters?**&water=true**&fire=true**',
+            }).as('getMonstersFiltered');
             cy.visit('/')
             cy.wait('@getMonsters')
-            cy.clock()
-            cy.contains('Pesquisa Avançada').click()
-            cy.tick(1000)
+            cy.openAdvancedSearch()
             cy.get('.btn.btn-plant').click()
             cy.get('.btn.btn-brute').click()
             cy.wait('@getMonsters')
@@ -188,9 +176,7 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
         it('Filter by Races, Properties, and Text', () => {
             cy.visit('/')
             cy.wait('@getMonsters')
-            cy.clock()
-            cy.contains('Pesquisa Avançada').click()
-            cy.tick(1000)
+            cy.openAdvancedSearch()
             cy.get('.btn.btn-plant').click()
             cy.get('.btn.btn-brute').click()
             cy.wait('@getMonsters')
@@ -207,6 +193,106 @@ describe('Hacker Stories', { baseUrl: 'https://ragnarokwiki.com.br' }, () => {
                 const text = Cypress.$(element).text().trim().toLowerCase();
                 expect(text).to.equal('lobisomem');
             })
+        })
+    })
+
+    context('Moacking the API', () => {
+        beforeEach(() => {
+            cy.intercept(
+                'GET',
+                `**/api/monsters?name=&page=*&per_page=*&**=false`,
+                { fixture: 'monsters' }
+            ).as('getMockedMonsters')
+            cy.visit('/')
+        })
+
+        it('Mocking a Filter by Race', () => {
+            cy.intercept(
+                'GET',
+                `**/api/monsters?**&dragon=true**`,
+                { fixture: 'monsters' }
+            ).as('getMockedRace')
+            cy.wait('@getMockedMonsters')
+            cy.openAdvancedSearch()
+            cy.get('.btn.btn-dragon').click()
+            cy.wait('@getMockedRace')
+            cy.contains('Sombra do Dragão').should('be.visible')
+            cy.contains('Dragão Ancestral').should('be.visible')
+        })
+        it('Mocking a Filter by Two Races', () => {
+            cy.intercept(
+                'GET',
+                `**/api/monsters?**&plant=true**&dragon=true**`,
+                { fixture: 'monsters' }
+            ).as('getMockedRaces')
+            cy.visit('/')
+            cy.wait('@getMockedMonsters')
+            cy.openAdvancedSearch()
+            cy.get('.btn.btn-dragon').click()
+            cy.get('.btn.btn-plant').click()
+            cy.wait('@getMockedRaces')
+            cy.contains('Sombra do Dragão').should('be.visible')
+        })
+        it('Mocking a Filter by Property', () => {
+            cy.intercept(
+                'GET',
+                `**/api/monsters?**&water=true**`,
+                { fixture: 'monsters' }
+            ).as('getMockedProperty')
+            cy.wait('@getMockedMonsters')
+            cy.openAdvancedSearch()
+            cy.get('.btn.btn-water').click()
+            cy.wait('@getMockedProperty')
+            cy.contains('Lobisomem').should('be.visible')
+        })
+        it('Mocking a Filter by Race and Property', () => {
+            cy.intercept(
+                'GET',
+                `**/api/monsters?**&plant=true**&water=true**`,
+                { fixture: 'monsters' }
+            ).as('getMockedRaceAndProperty')
+            cy.wait('@getMockedMonsters')
+            cy.openAdvancedSearch()
+            cy.get('.btn.btn-plant').click()
+            cy.get('.btn.btn-water').click()
+            cy.wait('@getMockedRaceAndProperty')
+            cy.contains('Lobisomem').should('be.visible')
+        })
+        it('Mocking a Filter by Two Races and Two Properties', () => {
+            cy.intercept(
+                'GET',
+                `**/api/monsters?**&plant=true**&dragon=true**&water=true**&fire=true**`,
+                { fixture: 'monsters' }
+            ).as('getMockedRacesAndProperties')
+            cy.wait('@getMockedMonsters')
+            cy.openAdvancedSearch()
+            cy.get('.btn.btn-dragon').click()
+            cy.get('.btn.btn-plant').click()
+            cy.get('.btn.btn-water').click()
+            cy.get('.btn.btn-fire').click()
+            cy.wait('@getMockedRacesAndProperties')
+            cy.contains('Sombra do Dragão').should('be.visible')
+            cy.contains('Dragão Ancestral').should('be.visible')
+            cy.contains('Lobisomem').should('be.visible')
+        })
+        it('Mocking a Filter by Races, Properties, and Text', () => {
+            cy.intercept(
+                'GET',
+                `**/api/monsters?name=*&**`,
+                { fixture: 'dragons' }
+            ).as('getMockedName')
+            cy.wait('@getMockedMonsters')
+            cy.openAdvancedSearch()
+            cy.get('#search-name').type('dragao{enter}', { delay: 0 })
+            cy.wait('@getMockedName')
+            cy.get('.btn.btn-dragon').click()
+            cy.get('.btn.btn-plant').click()
+            cy.get('.btn.btn-water').click()
+            cy.get('.btn.btn-fire').click()
+            cy.wait('@getMockedName')
+            cy.contains('Sombra do Dragão').should('be.visible')
+            cy.contains('Dragão Ancestral').should('be.visible')
+            cy.contains('Lobisomem').should('not.exist')
         })
     })
 })

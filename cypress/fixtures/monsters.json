@@ -1,0 +1,32 @@
+[
+  {
+    "id": 2146,
+    "name": "Sombra do Dragão",
+    "stats": {
+      "level": 117,
+      "element": 87,
+      "scale": 2,
+      "race": 9
+    }
+  },
+  {
+    "id": 3199,
+    "name": "Dragão Ancestral",
+    "stats": {
+      "level": 150,
+      "element": 43,
+      "scale": 2,
+      "race": 9
+    }
+  },
+  {
+    "id": 1022,
+    "name": "Lobisomem",
+    "stats": {
+      "level": 1,
+      "element": 21,
+      "scale": 1,
+      "race": 3
+    }
+  }
+]
