@@ -245,5 +245,18 @@ describe('Ragnarok Wiki Test Execution', { baseUrl: 'https://ragnarokwiki.com.br
             cy.wait('@getMockedProperty')
             cy.contains('Lobisomem').should('be.visible')
         })
+        it('Mocking a Filter by Race and Property', () => {
+            cy.intercept(
+                'GET',
+                `**/api/monsters?**&plant=true**&water=true**`,
+                { fixture: 'monsters' }
+            ).as('getMockedRaceAndProperty')
+            cy.wait('@getMockedMonsters')
+            cy.openAdvancedSearch()
+            cy.get('.btn.btn-plant').click()
+            cy.get('.btn.btn-water').click()
+            cy.wait('@getMockedRaceAndProperty')
+            cy.contains('Lobisomem').should('be.visible')
+        })
     })
 })
