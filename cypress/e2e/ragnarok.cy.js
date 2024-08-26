@@ -232,6 +232,17 @@ describe('Ragnarok Wiki Test Execution', { baseUrl: 'https://ragnarokwiki.com.br
             cy.get('.btn.btn-plant').click()
             cy.wait('@getMockedRaces')
             cy.contains('Sombra do Dragão').should('be.visible')
+        })
+        it('Mocking a Filter by Property', () => {
+            cy.intercept(
+                'GET',
+                `**/api/monsters?**&water=true**`,
+                { fixture: 'monsters' }
+            ).as('getMockedProperty')
+            cy.wait('@getMockedMonsters')
+            cy.openAdvancedSearch()
+            cy.get('.btn.btn-water').click()
+            cy.wait('@getMockedProperty')
             cy.contains('Lobisomem').should('be.visible')
         })
     })
