@@ -207,24 +207,32 @@ describe('Ragnarok Wiki Test Execution', { baseUrl: 'https://ragnarokwiki.com.br
         })
 
         it('Mocking a Filter by Race', () => {
-            cy.wait('@getMockedMonsters')
-            cy.openAdvancedSearch()
-            cy.get('.btn.btn-dragon').click()
-            cy.contains('Sombra do Dragão').should('be.visible')
-            cy.contains('Lobisomem').should('be.visible')
-        })
-        it('Mocking a Filter by Two Races', () => {
             cy.intercept(
                 'GET',
                 `**/api/monsters?**&dragon=true**`,
                 { fixture: 'monsters' }
-            ).as('getMockedDragons')
+            ).as('getMockedRace')
+            cy.wait('@getMockedMonsters')
+            cy.openAdvancedSearch()
+            cy.get('.btn.btn-dragon').click()
+            cy.wait('@getMockedRace')
+            cy.contains('Sombra do Dragão').should('be.visible')
+            cy.contains('Dragão Ancestral').should('be.visible')
+        })
+        it('Mocking a Filter by Two Races', () => {
+            cy.intercept(
+                'GET',
+                `**/api/monsters?**&plant=true**&dragon=true**`,
+                { fixture: 'monsters' }
+            ).as('getMockedRaces')
             cy.visit('/')
             cy.wait('@getMockedMonsters')
             cy.openAdvancedSearch()
             cy.get('.btn.btn-dragon').click()
+            cy.get('.btn.btn-plant').click()
+            cy.wait('@getMockedRaces')
             cy.contains('Sombra do Dragão').should('be.visible')
-            cy.contains('Dragão Ancestral').should('be.visible')
+            cy.contains('Lobisomem').should('be.visible')
         })
     })
 })
