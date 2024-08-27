@@ -1,5 +1,30 @@
 {
-  "dependencies": {
+  "name": "ragnarokwiki-tests",
+  "version": "1.0.0",
+  "description": "Repository with tests to validate the website www.ragnarokwiki.com.br",
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:open:mobile": "cypress open --config viewportWidth=410 viewportHeight=860",
+    "test": "cypress run",
+    "test:chrome": "cypress run -b chrome",
+    "test:electron": "cypress run -b electron",
+    "test:firefox": "cypress run -b firefox",
+    "test:mobile": "cypress run --config viewportWidth=410 viewportHeight=860"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cicero-Henrique/ragnarok_tests"
+  },
+  "keywords": [
+    "Testing",
+    "Cypress.io",
+    "Ragnarok",
+    "Ragnarok Wiki"
+  ],
+  "author": "Cicero Henrique (https://github.com/Cicero-Henrique)",
+  "license": "MIT",
+  "homepage": "https://github.com/Cicero-Henrique/ragnarok_tests/blob/main/README.md",
+  "devDependencies": {
     "cypress": "^13.13.3"
   }
 }
