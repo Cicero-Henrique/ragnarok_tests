@@ -1,25 +1,107 @@
-# Ragnarok Wiki - Test execution plan
+# Ragnarok Wiki Tests
 
-| ID | Title | Preconditions | Steps | Expected Results | Status |
-| -- | ----- | ------------- | ----- | ---------------- | ------ |
-| 01 | Verify Initial Items Load | User is on the homepage | 1. Open the URL: <https://ragnarokwiki.com.br> | 60 items should be loaded when the page finishes loading. | Pass |
-| 02 | Load More Items on Scroll | User is on the homepage | 1. Scroll down the page until the last of the initial 60 items is visible | An additional 60 items should load automatically. | Pass |
-| 03 | Back to Top Button Functionality | User is on the homepage and scrolled down | 1. Scroll down the page <br/> 2. Click on the "Back to Top" button | The page should smoothly scroll back to the top. | Pass |
-| 04 | Search Using Short Text | User is on the homepage and ready to perform a search | 1. Enter up to two characters in the search bar, e.g., "sha" <br/> 2. Press enter | A request should be made to the API. <br/> Only items containing the entered text should be displayed. | Pass |
-| 05 | Search Using Longer Text | User is on the homepage and ready to perform a search | 1. Enter a complete word in the search bar, e.g., "shadow" <br/> 2. Press enter | A request should be made to the API. <br/> Only items containing the entered text should be displayed. | Pass |
-| 06 | Clear Search Bar After Search | User is on the homepage and has performed a search | 1. Clear the search bar <br/> 2. Press enter | The initial set of items should be visible. | Pass |
-| 07 | Search Using Special Characters | User is on the homepage and ready to perform a search | 1. Enter text with special characters in the search bar, e.g., "aço" <br/> 2. Press enter | A request should be made to the API. <br/> Only items containing the entered text should be displayed. | Pass |
-| 08 | Show Advanced Search Bar | User is on the homepage | 1. Click on the "Advanced Search" button | The advanced search options should be visible in two rows. | Pass |
-| 09 | Hide Advanced Search Bar | Advanced search bar is visible | 1. Click on the "Advanced Search" button again | The advanced search options should be hidden. | Pass |
-| 10 | Filter by Race | Advanced search bar is visible | 1. Select a race from the advanced search options | All visible items should belong to the selected race. | Pass |
-| 11 | Filter by Two Races | Advanced search bar is visible | 1. Select two races from the advanced search options | All visible items should belong to the selected races. | Pass |
-| 12 | Filter by Property | Advanced search bar is visible | 1. Select a property from the advanced search options | All visible items should belong to the selected property. | Pass |
-| 13 | Filter by Race and Property | Advanced search bar is visible | 1. Select a race and a property from the advanced search options | All visible items should belong to the selected race and property. | Pass |
-| 14 | Filter by Two Races and Two Properties | Advanced search bar is visible | 1. Select two races and two properties from the advanced search options | All visible items should belong to the selected races and properties. | Pass |
-| 15 | Filter by Races, Properties, and Text | Advanced search bar is visible | 1. Select two races and two properties <br/> 2. Enter text in the search bar | All visible items should belong to the selected races and properties, and their names should contain the entered text. | Pass |
-| 16 | Mocking a Filter by Race | Mocks are set up correctly | 1. Select a race from the advanced search options <br/> 2. Intercept the request and trigger the mock | The items corresponding to the mocked response should be displayed. | Pass |
-| 17 | Mocking a Filter by Two Races | Mocks are set up correctly | 1. Select two races from the advanced search options <br/> 2. Intercept the request and trigger the mock | The items corresponding to the mocked response for both races should be displayed. | Pass |
-| 18 | Mocking a Filter by Property | Mocks are set up correctly | 1. Select a property from the advanced search options <br/> 2. Intercept the request and trigger the mock | The items corresponding to the mocked response should be displayed. | Pass |
-| 19 | Mocking a Filter by Race and Property | Mocks are set up correctly | 1. Select a race and a property from the advanced search options <br/> 2. Intercept the request and trigger the mock | The items corresponding to the mocked response for the selected race and property should be displayed. | Pass |
-| 20 | Mocking a Filter by Two Races and Two Properties | Mocks are set up correctly | 1. Select two races and two properties from the advanced search options <br/> 2. Intercept the request and trigger the mock | The items corresponding to the mocked response for the selected races and properties should be displayed. | Pass |
-| 21 | Mocking a Filter by Races, Properties, and Text | Mocks are set up correctly | 1. Select two races and two properties <br/> 2. Enter text in the search bar <br/> 3. Intercept the request and trigger the mock | The items corresponding to the mocked response, filtered by the races, properties, and text, should be displayed. | Pass |
+This repository contains a comprehensive set of automated tests designed to validate the [RagnarokWiki website](https://www.ragnarokwiki.com.br). The primary approach involves verifying both the API calls made by the Front-End and the visual elements of the user interface, ensuring that all site functionalities operate as expected.
+
+## Test Execution Plan
+
+The test execution plan covers:
+
+* API Call Validation: Tests that ensure the requests made by the Front-End return the correct data and that communication with the server is efficient and accurate.
+
+* Visual Element Verification: Tests focused on ensuring that all user interface elements are displayed correctly and interact as expected. Mocks were used to simulate API responses, significantly optimizing test execution time.
+
+## Automation with Cypress
+
+All tests were implemented using the Cypress framework, which provides a powerful and intuitive tool for end-to-end test automation. This allows not only testing the behavior of the Front-End but also monitoring how it performs under different conditions. You can also run the automated tests simulating mobile screens.
+
+## Continuous Development
+
+As the RagnarokWiki website continues to evolve, the test execution plan will also expand. New tests will be added as new features are implemented, ensuring that the quality of the site is maintained and improved.
+
+## Requirements
+
+To set up and run the tests in this repository, the following requirements must be installed on your machine:
+
+[Node.js](https://nodejs.org/en/download/package-manager)
+
+[NPM](https://github.com/npm/cli/releases/tag/v10.8.2)
+
+## Installation
+
+To start using Cypress in this project, follow the steps below:
+
+### Install Cypress
+
+Run the following command in the terminal to install Cypress as a project dependency:
+
+``` bash
+npm install cypress
+```
+
+### Open Cypress Launchpad
+
+To open the graphical interface of Cypress, use the following command:
+
+``` bash
+npx cypress open
+```
+
+If you have any questions, check the official [Cypress documentation](https://docs.cypress.io/guides/getting-started/installing-cypress).
+
+## Custom Commands
+
+This repository includes custom commands to facilitate running tests in different scenarios:
+
+### Open Cypress Launchpad Command
+
+To open Cypress Launchpad with the default configuration:
+
+``` bash
+npm run cy:open
+```
+
+### Open Cypress Launchpad in Mobile Size
+
+To simulate a mobile environment when opening Cypress Launchpad:
+
+``` bash
+npm run cy:open:mobile
+```
+
+### Run Tests in Headless Mode
+
+To run tests in headless mode (without a graphical interface):
+
+``` bash
+npm run test
+```
+
+### Run Tests in Specific Browsers
+
+To run tests in specific browsers, use the commands below. Ensure that the desired browser is installed on your machine.
+
+**Chrome**:
+
+``` bash
+npm run test:chrome
+```
+
+**Electron**:
+
+``` bash
+npm run test:electron
+```
+
+**Firefox**:
+
+``` bash
+npm run test:firefox
+```
+
+### Run Tests Simulating Mobile Screens
+
+To run tests simulating a mobile environment:
+
+``` bash
+npm run test:mobile
+```
