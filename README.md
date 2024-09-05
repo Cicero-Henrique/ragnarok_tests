@@ -105,3 +105,4 @@ To run tests simulating a mobile environment:
 ``` bash
 npm run test:mobile
 ```
+
