@@ -35,7 +35,7 @@ To start using Cypress in this project, follow the steps below:
 Run the following command in the terminal to install Cypress as a project dependency:
 
 ``` bash
-npm install cypress
+npm install
 ```
 
 ### Open Cypress Launchpad
