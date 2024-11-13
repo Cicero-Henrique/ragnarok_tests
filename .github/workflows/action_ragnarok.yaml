@@ -1,5 +1,6 @@
 name: Ragnarok wiki tests 🧪
 on:
+  workflow_call:
   push:
     branches: ["main"]
   workflow_dispatch:
